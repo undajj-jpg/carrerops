@@ -1,0 +1,48 @@
+# Career-Ops Recruiter — Canonical Candidate States
+# Source of truth for the recruiter pipeline.
+
+states:
+  - id: new
+    label: New
+    description: CV ingested, not yet evaluated
+    dashboard_group: new
+
+  - id: evaluated
+    label: Evaluated
+    description: Full evaluation completed, pending review
+    dashboard_group: evaluated
+
+  - id: shortlisted
+    label: Shortlisted
+    description: Recruiter marked as interview candidate
+    dashboard_group: shortlisted
+
+  - id: interviewing
+    label: Interviewing
+    description: Active interview process
+    dashboard_group: interviewing
+
+  - id: offer_extended
+    label: Offer Extended
+    description: Offer sent to candidate
+    dashboard_group: offer
+
+  - id: hired
+    label: Hired
+    description: Candidate accepted and hired
+    dashboard_group: hired
+
+  - id: rejected
+    label: Rejected
+    description: Did not meet requirements
+    dashboard_group: rejected
+
+  - id: withdrawn
+    label: Withdrawn
+    description: Candidate withdrew from process
+    dashboard_group: withdrawn
+
+  - id: auto_rejected
+    label: Auto-Rejected
+    description: Failed hard filters automatically
+    dashboard_group: rejected

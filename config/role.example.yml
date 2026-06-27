@@ -1,0 +1,73 @@
+# Career-Ops Recruiter Mode — Role Configuration
+# Copy this file to config/role.yml and fill in your open role details.
+# This is the single source of truth for the position you're hiring for.
+
+role:
+  title: "Senior Backend Engineer"
+  department: "Engineering"
+  team: "Platform"
+  reports_to: "Engineering Manager"
+  team_size: 8
+
+  seniority:
+    target: "Senior"        # Junior, Mid, Senior, Staff, Principal, Lead, Manager, Director
+    accept_range: ["Mid", "Senior", "Staff"]  # levels you'd still consider
+
+  location:
+    type: "hybrid"          # remote, hybrid, onsite
+    office: "New York, NY"
+    remote_countries: ["US", "Canada"]
+    visa_sponsorship: false
+
+requirements:
+  must_have:
+    - "3+ years backend development (Go, Python, or Java)"
+    - "Experience with distributed systems"
+    - "SQL and relational database design"
+    - "REST API design and implementation"
+    - "CI/CD pipeline experience"
+
+  nice_to_have:
+    - "Kubernetes/Docker orchestration"
+    - "Event-driven architecture (Kafka, RabbitMQ)"
+    - "GraphQL"
+    - "Observability tooling (Datadog, Prometheus)"
+    - "Technical mentorship experience"
+
+  hard_filters:
+    # Candidates missing ALL of these are auto-rejected
+    min_years_experience: 3
+    required_skills_any: ["Go", "Python", "Java", "Rust"]  # must have at least 1
+
+compensation:
+  band: "$150K-$200K"
+  currency: "USD"
+  equity: true
+  bonus: "10-15%"
+
+culture:
+  values:
+    - "Ownership mentality"
+    - "Strong written communication"
+    - "Collaborative but autonomous"
+  red_flags:
+    - "Only individual contributor, never collaborated"
+    - "No evidence of shipping to production"
+  green_flags:
+    - "Open source contributions"
+    - "Technical blog posts or talks"
+    - "Led a project end-to-end"
+
+evaluation:
+  # Override default weights
+  weights:
+    requirements_match: 35
+    experience_depth: 25
+    technical_fit: 20
+    seniority_fit: 10
+    culture_signals: 10
+
+  # Auto-advance threshold — candidates scoring above this get flagged for immediate interview
+  auto_advance_score: 4.5
+  # Auto-reject threshold — candidates below this are auto-rejected with explanation
+  auto_reject_score: 2.5
