@@ -34,9 +34,9 @@ export default function RootLayout({
           </a>
           <div className="flex gap-4 text-sm text-gray-400">
             <a href="/" className="hover:text-white transition-colors">Dashboard</a>
+            <a href="/roles" className="hover:text-white transition-colors">Positions</a>
             <a href="/candidates" className="hover:text-white transition-colors">Candidates</a>
             <a href="/upload" className="hover:text-white transition-colors">Upload CVs</a>
-            <a href="/role" className="hover:text-white transition-colors">Role Config</a>
           </div>
         </nav>
         <main className="flex-1">{children}</main>

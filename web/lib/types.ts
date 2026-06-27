@@ -1,5 +1,6 @@
 export interface Candidate {
   id: string;
+  roleId: string;
   name: string;
   currentRole: string;
   score: number | null;
@@ -16,6 +17,7 @@ export interface Candidate {
 }
 
 export interface RoleConfig {
+  id: string;
   title: string;
   department: string;
   team: string;
@@ -26,6 +28,7 @@ export interface RoleConfig {
   niceToHave: string[];
   compBand: string;
   jdText: string;
+  createdAt: string;
 }
 
 export interface EvaluationReport {

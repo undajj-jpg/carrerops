@@ -5,6 +5,7 @@ import type { Candidate } from "@/lib/types";
 export async function POST(request: Request) {
   const formData = await request.formData();
   const files = formData.getAll("files") as File[];
+  const roleId = (formData.get("roleId") as string) || "";
 
   if (files.length === 0) {
     return NextResponse.json({ error: "No files uploaded" }, { status: 400 });
@@ -19,6 +20,7 @@ export async function POST(request: Request) {
     const id = crypto.randomUUID();
     const candidate: Candidate = {
       id,
+      roleId,
       name: nameFromFile,
       currentRole: "",
       score: null,

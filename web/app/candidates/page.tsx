@@ -1,7 +1,8 @@
 "use client";
 
-import { useEffect, useState } from "react";
-import type { Candidate } from "@/lib/types";
+import { useEffect, useState, Suspense } from "react";
+import { useSearchParams } from "next/navigation";
+import type { Candidate, RoleConfig } from "@/lib/types";
 
 function ScoreBadge({ score }: { score: number | null }) {
   if (score === null) return <span className="text-gray-500">Pending</span>;
@@ -21,15 +22,30 @@ function ScoreBadge({ score }: { score: number | null }) {
 }
 
 export default function CandidatesPage() {
+  return (
+    <Suspense>
+      <CandidatesContent />
+    </Suspense>
+  );
+}
+
+function CandidatesContent() {
+  const searchParams = useSearchParams();
+  const roleId = searchParams.get("roleId") || "";
   const [candidates, setCandidates] = useState<Candidate[]>([]);
   const [selected, setSelected] = useState<Candidate | null>(null);
   const [filter, setFilter] = useState("all");
+  const [roles, setRoles] = useState<RoleConfig[]>([]);
+  const [activeRoleId, setActiveRoleId] = useState(roleId);
 
   useEffect(() => {
-    fetch("/api/candidates")
-      .then((r) => r.json())
-      .then(setCandidates);
+    fetch("/api/roles").then((r) => r.json()).then(setRoles);
   }, []);
+
+  useEffect(() => {
+    const url = activeRoleId ? `/api/candidates?roleId=${activeRoleId}` : "/api/candidates";
+    fetch(url).then((r) => r.json()).then(setCandidates);
+  }, [activeRoleId]);
 
   const filtered = candidates.filter((c) => {
     if (filter === "all") return true;
@@ -43,19 +59,32 @@ export default function CandidatesPage() {
 
   return (
     <div className="p-6 max-w-6xl mx-auto">
-      <div className="flex items-center justify-between mb-6">
+      <div className="flex items-center justify-between mb-4">
         <h1 className="text-2xl font-bold">Candidates</h1>
-        <div className="flex gap-2 text-sm">
-          {["all", "strong-yes", "yes", "maybe", "no", "pending"].map((f) => (
-            <button
-              key={f}
-              onClick={() => setFilter(f)}
-              className={`px-3 py-1 rounded ${filter === f ? "bg-cyan-600 text-white" : "bg-gray-800 text-gray-400 hover:text-white"}`}
-            >
-              {f.replace("-", " ").replace(/\b\w/g, (c) => c.toUpperCase())}
-            </button>
-          ))}
+        <div className="flex items-center gap-3">
+          <select
+            value={activeRoleId}
+            onChange={(e) => { setActiveRoleId(e.target.value); setSelected(null); }}
+            className="px-3 py-1.5 bg-gray-800 border border-gray-700 rounded text-sm text-gray-300 focus:border-cyan-600 focus:outline-none"
+          >
+            <option value="">All Positions</option>
+            {roles.map((r) => (
+              <option key={r.id} value={r.id}>{r.title || "Untitled"}</option>
+            ))}
+          </select>
         </div>
+      </div>
+
+      <div className="flex gap-2 text-sm mb-6">
+        {["all", "strong-yes", "yes", "maybe", "no", "pending"].map((f) => (
+          <button
+            key={f}
+            onClick={() => setFilter(f)}
+            className={`px-3 py-1 rounded ${filter === f ? "bg-cyan-600 text-white" : "bg-gray-800 text-gray-400 hover:text-white"}`}
+          >
+            {f.replace("-", " ").replace(/\b\w/g, (c) => c.toUpperCase())}
+          </button>
+        ))}
       </div>
 
       <div className="flex gap-6">

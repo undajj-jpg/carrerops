@@ -2,8 +2,10 @@ import { NextResponse } from "next/server";
 import { getCandidates, addCandidate, updateCandidate, deleteCandidate } from "@/lib/store";
 import type { Candidate } from "@/lib/types";
 
-export async function GET() {
-  return NextResponse.json(getCandidates());
+export async function GET(request: Request) {
+  const { searchParams } = new URL(request.url);
+  const roleId = searchParams.get("roleId") || undefined;
+  return NextResponse.json(getCandidates(roleId));
 }
 
 export async function POST(request: Request) {
@@ -11,6 +13,7 @@ export async function POST(request: Request) {
   const id = crypto.randomUUID();
   const candidate: Candidate = {
     id,
+    roleId: body.roleId || "",
     name: body.name || "Unknown",
     currentRole: body.currentRole || "",
     score: null,

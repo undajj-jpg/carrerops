@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { getCandidates, getStats, getRole } from "@/lib/store";
+import { getCandidates, getStats, getRoles } from "@/lib/store";
 
 function ScoreBadge({ score }: { score: number | null }) {
   if (score === null) return <span className="text-gray-500">—</span>;
@@ -35,22 +35,21 @@ export const dynamic = "force-dynamic";
 export default function Dashboard() {
   const stats = getStats();
   const candidates = getCandidates().slice(0, 10);
-  const role = getRole();
+  const roles = getRoles();
 
   return (
     <div className="p-6 max-w-6xl mx-auto space-y-8">
       <div>
         <h1 className="text-2xl font-bold">Recruiter Dashboard</h1>
-        {role ? (
+        {roles.length > 0 ? (
           <p className="text-gray-400 mt-1">
-            Hiring: <span className="text-white">{role.title}</span> —{" "}
-            {role.department}
+            {roles.length} open position{roles.length !== 1 ? "s" : ""}
           </p>
         ) : (
           <p className="text-gray-500 mt-1">
-            No role configured.{" "}
-            <Link href="/role" className="text-cyan-400 hover:underline">
-              Set up your open role
+            No positions configured.{" "}
+            <Link href="/roles/new" className="text-cyan-400 hover:underline">
+              Create your first position
             </Link>
           </p>
         )}
@@ -83,6 +82,28 @@ export default function Dashboard() {
           </div>
         ))}
       </div>
+
+      {roles.length > 0 && (
+        <div>
+          <div className="flex items-center justify-between mb-3">
+            <h2 className="text-lg font-semibold">Open Positions</h2>
+            <Link href="/roles" className="text-sm text-cyan-400 hover:underline">
+              Manage all
+            </Link>
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+            {roles.slice(0, 4).map((role) => (
+              <Link key={role.id} href={`/roles/${role.id}`} className="bg-gray-900 rounded-lg border border-gray-800 p-4 hover:border-cyan-800 transition-colors">
+                <div className="font-medium">{role.title || "Untitled"}</div>
+                <div className="text-sm text-gray-500 mt-1">
+                  {[role.department, role.seniority, role.locationType === "remote" ? "Remote" : role.locationType === "hybrid" ? "Hybrid" : "On-site"].filter(Boolean).join(" · ")}
+                </div>
+                {role.compBand && <div className="text-sm text-green-400/70 mt-1">{role.compBand}</div>}
+              </Link>
+            ))}
+          </div>
+        </div>
+      )}
 
       <div>
         <div className="flex items-center justify-between mb-3">
@@ -138,9 +159,9 @@ export default function Dashboard() {
           <div className="text-cyan-400 text-lg mb-1 group-hover:text-cyan-300">Upload CVs</div>
           <p className="text-gray-500 text-sm">Upload PDF resumes for evaluation</p>
         </Link>
-        <Link href="/role" className="bg-gray-900 rounded-lg border border-gray-800 p-4 hover:border-purple-800 transition-colors group">
-          <div className="text-purple-400 text-lg mb-1 group-hover:text-purple-300">Configure Role</div>
-          <p className="text-gray-500 text-sm">Set JD, requirements, and scoring weights</p>
+        <Link href="/roles/new" className="bg-gray-900 rounded-lg border border-gray-800 p-4 hover:border-purple-800 transition-colors group">
+          <div className="text-purple-400 text-lg mb-1 group-hover:text-purple-300">New Position</div>
+          <p className="text-gray-500 text-sm">Add a new open role to hire for</p>
         </Link>
         <Link href="/candidates" className="bg-gray-900 rounded-lg border border-gray-800 p-4 hover:border-green-800 transition-colors group">
           <div className="text-green-400 text-lg mb-1 group-hover:text-green-300">All Candidates</div>

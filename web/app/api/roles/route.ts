@@ -1,11 +1,9 @@
 import { NextResponse } from "next/server";
-import { getRoles, addRole } from "@/lib/store";
+import { getRoles, addRole, deleteRole } from "@/lib/store";
 import type { RoleConfig } from "@/lib/types";
 
 export async function GET() {
-  const roles = getRoles();
-  if (roles.length === 0) return NextResponse.json({ configured: false });
-  return NextResponse.json({ configured: true, role: roles[0] });
+  return NextResponse.json(getRoles());
 }
 
 export async function POST(request: Request) {
@@ -25,5 +23,13 @@ export async function POST(request: Request) {
     createdAt: new Date().toISOString(),
   };
   addRole(role);
-  return NextResponse.json({ saved: true, id: role.id });
+  return NextResponse.json(role, { status: 201 });
+}
+
+export async function DELETE(request: Request) {
+  const { searchParams } = new URL(request.url);
+  const id = searchParams.get("id");
+  if (!id) return NextResponse.json({ error: "id required" }, { status: 400 });
+  const deleted = deleteRole(id);
+  return NextResponse.json({ deleted });
 }
